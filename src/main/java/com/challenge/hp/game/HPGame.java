@@ -32,6 +32,11 @@ public class HPGame extends Game{
     public boolean start(Scanner scanner) {
         System.out.println("Welcome to the Harry Potter game!");
         System.out.println(TILDE_SEPARATOR);
+        System.out.println("Objective of this game is to defeat three opponent characters by casting stronger spells than theirs." +
+                "You get to choose your character and three spells for your character at the beginning, and every time you defeat" +
+                " an opponent, you get an additional spell (you don't get to choose this - what's a game without a bit of luck ;))." +
+                "Explore the game to figure out the strengths of the spells!");
+        System.out.println(TILDE_SEPARATOR);
         if(player == null){
             player = playerSelection(scanner);
             spellSelection(player, scanner);
