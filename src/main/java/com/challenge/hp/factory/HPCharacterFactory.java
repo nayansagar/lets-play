@@ -1,6 +1,6 @@
 package com.challenge.hp.factory;
 
-import com.challenge.common.domain.Team;
+import com.challenge.hp.domain.Team;
 import com.challenge.common.factory.CharacterFactory;
 import com.challenge.hp.domain.HPCharacter;
 import com.challenge.common.util.RandomNumberUtils;

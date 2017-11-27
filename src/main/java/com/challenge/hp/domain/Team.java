@@ -1,4 +1,4 @@
-package com.challenge.common.domain;
+package com.challenge.hp.domain;
 
 public enum Team {
     PLAYER,

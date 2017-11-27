@@ -18,6 +18,10 @@ import static com.challenge.common.util.Constants.Text.ANSI_RESET;
 public class HPGame extends Game{
 
     public static final int SPELLS_PER_PLAYER = 3;
+    public static final String GAME_OBJECTIVE = "Objective of this game is to defeat three opponent characters by casting" +
+            " stronger spells than theirs. You get to choose your character and three spells for your character at the" +
+            " beginning of the game. Every time you defeat an opponent, you get one additional spell (you don't get to choose" +
+            " this - what's a game without a bit of luck ;)). Explore the game to figure out the strengths of the spells!";
 
     HPCharacter player;
 
@@ -32,17 +36,14 @@ public class HPGame extends Game{
     public boolean start(Scanner scanner) {
         System.out.println("Welcome to the Harry Potter game!");
         System.out.println(TILDE_SEPARATOR);
-        System.out.println("Objective of this game is to defeat three opponent characters by casting stronger spells than theirs." +
-                "You get to choose your character and three spells for your character at the beginning, and every time you defeat" +
-                " an opponent, you get an additional spell (you don't get to choose this - what's a game without a bit of luck ;))." +
-                "Explore the game to figure out the strengths of the spells!");
+        System.out.println(GAME_OBJECTIVE);
         System.out.println(TILDE_SEPARATOR);
         if(player == null){
             player = playerSelection(scanner);
             spellSelection(player, scanner);
         }
         int score = 0;
-        int total = characterFactory.getComputerOptions().size();
+        int maxScore = characterFactory.getComputerOptions().size();
         while (!player.getSpells().isEmpty()){
             if(computerPlayer == null){
                 computerPlayer = assignComputerPlayer();
@@ -50,14 +51,14 @@ public class HPGame extends Game{
             if(computerPlayer == null) break;
             System.out.println("Your opponent : " + computerPlayer.getName() + ", Spells : " + computerPlayer.getSpells());
             System.out.println("You           : " + player.getName() + ", Spells : " + player.getSpells());
-            score = startRound(scanner, player, score, total, computerPlayer);
+            score = startRound(scanner, player, score, maxScore, computerPlayer);
             if(score == -1){
                 return true;
             }
             computerPlayer = null;
         }
         player = null;
-        printResultAndExit(scanner, score, total);
+        printResultAndExit(scanner, score, maxScore);
         return false;
     }
 
@@ -116,13 +117,13 @@ public class HPGame extends Game{
         HPCharacter computerPlayer = characterFactory.getRandomComputerPlayer();
         if(computerPlayer == null) return null;
         if(computerPlayer.getSpells().isEmpty()){
-            commandFactory.addRandomSpells(3).forEach(computerPlayer.getSpells()::add);
+            commandFactory.addRandomSpells(SPELLS_PER_PLAYER).forEach(computerPlayer.getSpells()::add);
         }
         return computerPlayer;
     }
 
-    private void printResultAndExit(Scanner scanner, int score, int total) {
-        if(score < total){
+    private void printResultAndExit(Scanner scanner, int score, int maxScore) {
+        if(score < maxScore){
             System.out.println("You lost the game! You could not defeat all of your opponents");
         }else {
             System.out.println("You won the game!");
@@ -133,8 +134,8 @@ public class HPGame extends Game{
 
     private Command playerSpell(Scanner scanner, HPCharacter player, CommandFactory commandFactory) {
         System.out.print("Cast your spell " + player.getSpells() + " >");
-        String spell = scanner.next();
-        scanner.nextLine();
+        String spell = scanner.next(); scanner.nextLine(); //next() does not read new line character
+
         Command playerSpell = commandFactory.getSpell(spell.toLowerCase());
         if(!player.getSpells().contains(playerSpell)){
             System.out.println("Not your spell!!");
@@ -168,8 +169,7 @@ public class HPGame extends Game{
         }
         System.out.println(TILDE_SEPARATOR);
         System.out.print("Enter the number to pick your character>");
-        int selection = scanner.nextInt();
-        scanner.nextLine();
+        int selection = scanner.nextInt(); scanner.nextLine(); //nextInt() does not read new line character
         if(selection > playerCharacters.size()){
             System.out.println("You have only "+playerCharacters.size()+" options!");
             return playerSelection(scanner);

@@ -25,6 +25,7 @@ public class GOGLogger {
         }
     }
 
+    //Deviation from the singleton pattern - required to be public for LogManager
     public GOGLogger(){}
 
     public static GOGLogger getInstance(){
